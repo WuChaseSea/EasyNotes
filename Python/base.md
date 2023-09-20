@@ -7,11 +7,49 @@
 conda create -n develop python=3.9
 ```
 
-## 常用库的安装
+## 常用库的安装和使用
 
 * Crypto
 
 ```sh
 pip install pycryptodome  # Windows
 pip install pycrypto  # Linux
+```
+
+* opencv
+
+读取图片参数：
+
+```sh
+cv2.imread()
+-1: cv2.IMREAD_UNCHANGED
+0: cv2.IMREAD_GRAY
+1: cv2.IMREAD_COLOR
+```
+
+保存图片：
+
+```sh
+cv2.imwrite(filepath, imgdata)
+```
+
+改变大小：
+
+```sh
+cv2.resize(imgdata, dsize=None, fx=2, fy=2, interpolation=cv2.INTER_LINEAR)
+
+cv2.INTER_NEAREST 最近邻
+cv2.INTER_CUBIC 三次
+cv2.INTER_LINEAR 默认，线性插值
+cv2.INTER_AREA 区域插值
+```
+
+**对标签进行重采样时一定要注意插值方法，不要插入新值**
+
+## 常见情况
+
+jupyter转py
+
+```sh
+jupyter nbconvert --to script xxx.ipynb
 ```
