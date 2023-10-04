@@ -17,3 +17,7 @@ GitHub链接：[SAM-Adapter](https://github.com/tianrun-chen/SAM-Adapter-PyTorch
 其中，MLP结构有权值共享和不共享两部分；image encoder部分的参数是固定的，最终的mask encoder是微调的；
 在代码中，image encoder的参数是稍微有点区别的，因为中间有prompt信息，而mask encoder的代码则是与SAM的代码一致；
 SAM-Adapter的代码集成在mmseg中；
+
+## 训练过程
+
+在SAM-Adapter的训练过程中，采用requires_grad_(false)函数将image encoder中的非prompt部分参数固定住，将该参数设置成不被跟踪；
