@@ -7,6 +7,21 @@
 conda create -n develop python=3.9
 ```
 
+## 环境分享
+
+```sh
+pip freeze > requirements.txt  # 这样导出的文件中存在自己系统的文件路径
+pip list --format=freeze > requirements.txt  # 只包含安装库的版本，不包含文件路径
+```
+
+```sh
+pip install conda-pack
+
+conda pack -n myenv -o myenv.tar.gz --ignore-missing-files
+
+tar -xzf myenv.tar.gz -C my_env
+```
+
 ## 常用库的安装和使用
 
 * Crypto
