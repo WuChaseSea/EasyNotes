@@ -21,3 +21,14 @@ sudo ln -s /usr/lib/x86_64-linux-gnu/libmpfr.so.4 /usr/lib/x86_64-linux-gnu/libm
 ```sh
 sudo rm -rf /usr/lib/x86_64-linux-gnu/libmpfr.so.6
 ```
+
+```python
+import cv2
+ImportError: libGL.so.1: cannot open shared object file: No such file or directory
+
+apt install libgl1-mesa-glx
+
+libgthread-2.0.so.0: cannot open shared object file: No such file or directory
+
+apt-get install libglib2.0-0
+```
