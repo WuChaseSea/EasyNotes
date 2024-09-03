@@ -24,6 +24,26 @@ mkdir my_env ## 创建文件夹，不然tar解压缩指定目录会报错
 tar -xvzf myenv.tar.gz -C my_env
 ```
 
+需求描述：
+
+在一台可联网的电脑上配置了Anaconda Python环境，可能是Base环境，也有可能不是，需要将该环境移植到另一台离线电脑上的base环境上，不一定是Anaconda；
+
+方法：
+
+```sh
+# 在可联网电脑上配置好环境
+pip freeze > requirements.txt
+# 去除requiremets上的使用本地whl安装的库；
+
+# 将该环境下的库导出为whl
+mkdir packages
+pip download -i requirements.txt -d packages  # 期间遇到一些导出不了失败的库直接从requirements.txt上删除
+
+# 在离线电脑上安装
+pip install --no-index --find-links=packages -r requirements.txt  # 如果有安装失败的，先在requirements.txt上删了安装其他的，后面再到requirements.txt加上，再重新安装
+# 因为有可能遇到安装顺序导致的问题
+```
+
 ## 常用库的安装和使用
 
 * Crypto

@@ -32,3 +32,37 @@ libgthread-2.0.so.0: cannot open shared object file: No such file or directory
 
 apt-get install libglib2.0-0
 ```
+
+问题描述：
+gdal属性字段中文乱码，修改编码为GBK没用；有时出现 One or several characters couldn't be converted correctly from GBK to UTF-8.  This warning will not be emitted anymore
+
+解决方法：
+
+记得注册驱动；
+
+```python
+gdal.SetConfigOption("SHAPE_ENCODING", "")  # 不设置的话会自动识别是UTF-8还是GBK；
+ogr.RegisterAll() # 记得注册驱动
+```
+
+问题描述：
+version `GLIBCXX_3.4.29‘ not found
+strings /usr/lib/x86_64-linux-gnu/libstdc++.so.6 | grep GLIBCXX 结果只到GLIBCXX_3.4.25
+
+解决方法：
+
+```sh
+# 查找libstd
+sudo find / -name "libstdc++.so.6*"
+
+# 挨个尝试里面能到的最高版本：
+strings /home/wuye/anaconda3/envs/tf2/lib/libstdc++.so.6.0.29 | grep GLIBCXX
+
+# 找到一个能行的之后:
+sudo cp /home/wuye/anaconda3/envs/tf2/lib/libstdc++.so.6.0.29 /usr/lib/x86_64-linux-gnu/
+# 删除之前链接
+sudo rm /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+# 创建新的链接
+sudo ln -s /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.29 /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+
+```
