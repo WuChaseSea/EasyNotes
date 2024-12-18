@@ -1,14 +1,18 @@
-# BLIP: Bootstrapping Language-Image Pre-training for Unified Vision-Language Understanding and Generation
-
+# BLIP-2: Bootstrapping Language-Image Pre-training with Frozen Image Encoders and Large Language Models
 <!-- omit in toc -->
 
-文章链接：[BLIP: Bootstrapping Language-Image Pre-training for Unified Vision-Language Understanding and Generation](https://proceedings.mlr.press/v162/li22n.html)
-代码链接：[BLIP](https://github.com/salesforce/BLIP)
+文章链接：[BLIP-2: Bootstrapping Language-Image Pre-training with Frozen Image Encoders and Large Language Models](https://arxiv.org/abs/2301.12597)
+代码链接：[BLIP-1](https://github.com/salesforce/LAVIS/tree/main/projects/blip2)
+
+## 目的
+
+减少计算成本并避免灾难性遗忘，
 
 ## 贡献点
 
-* 编码器-解码器的多模态混合结构MED，用于多任务预训练和灵活的迁移学习的模型结构。它可以是单模态的图像编码器、基于图像的文本编码器和基于图像的文本解码器。使用三个视觉语言目标联合训练，图文对比损失ITC，图文匹配ITM，图像条件语言建模LM
-* 标题和过滤（CapFilt），从有噪声的图文数据集中学习的引导方法，captioner对图像合成描述，filter从原始网络文本和合成文本中移除噪声文本。
+* BLIP-2有效地利用了预训练的图像模型和语言模型，在图像和语言之间构建了两阶段预训练的Q-Former：表示学习阶段和生成学习阶段。
+* 基于大语言模型驱动，BLIP-2可以实现自然语言引导的零样本图文生成；
+* 使用了冻结的单模型和轻量级的Q-Former，BLIP-2实现了最优的计算效率；
 
 ## 模型
 
