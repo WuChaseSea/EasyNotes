@@ -37,7 +37,7 @@ pip freeze > requirements.txt
 
 # 将该环境下的库导出为whl
 mkdir packages
-pip download -i requirements.txt -d packages  # 期间遇到一些导出不了失败的库直接从requirements.txt上删除
+pip download -r requirements.txt -d packages  # 期间遇到一些导出不了失败的库直接从requirements.txt上删除
 
 # 在离线电脑上安装
 pip install --no-index --find-links=packages -r requirements.txt  # 如果有安装失败的，先在requirements.txt上删了安装其他的，后面再到requirements.txt加上，再重新安装
