@@ -9,10 +9,10 @@ def encode_image(image_path):
         return base64.b64encode(image_file.read()).decode("utf-8")
 
 # 将xxxx/test.png替换为你本地图像的绝对路径
-base64_image = encode_image("test.png")
+base64_image = encode_image(r"F:\代码库\测试\图文描述测试\00035_merged_with_contours.jpg")
 client = OpenAI(
     # 若没有配置环境变量，请用百炼API Key将下行替换为：api_key="sk-xxx"
-    api_key = "sk-463e5edad9a14c8aae633243bad47526",
+    api_key = os.getenv("DASHSCOPE_API_KEY")
     base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
 )
 completion = client.chat.completions.create(
@@ -32,7 +32,8 @@ completion = client.chat.completions.create(
                     # WEBP图像： f"data:image/webp;base64,{base64_image}"
                     "image_url": {"url": f"data:image/png;base64,{base64_image}"}, 
                 },
-                {"type": "text", "text": "请根据图片内容回答以下问题：图中红色框内的地物类别是什么?"},
+                {"type": "text", "text": "请根据图片内容回答以下问题：左边是前时相影像，右边是后时相影像，请描述图像中的红色框内的变化内容?"},
+                # {"type": "text", "text": "Describe the change information of the image"},
             ],
         }
     ],
