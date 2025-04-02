@@ -1,45 +1,49 @@
 import os
+import pandas as pd
 from langchain_community.llms import Tongyi
 from langchain_community.chat_models.tongyi import ChatTongyi
 from langchain.prompts import ChatPromptTemplate
 from langchain_core.messages import HumanMessage, SystemMessage
+from langchain.chains import RetrievalQA  #检索QA链，在文档上进行检索
+from langchain_community.document_loaders import CSVLoader #文档加载器，采用csv格式存储
+from langchain_community.vectorstores import DocArrayInMemorySearch  #向量存储
+from langchain.indexes.vectorstore import VectorstoreIndexCreator 
+from langchain_community.embeddings import OpenAIEmbeddings, HuggingFaceEmbeddings
 
 
 if __name__ == '__main__':
 
-    # 首先，构造一个提示模版字符串：`template_string`
+    file = r'.\OutdoorClothingCatalog_1000.csv'
 
-    template_string = """把由三个反引号分隔的文本\
-    翻译成一种{style}风格。\
-    文本: ```{text}```
-    """
+    # 使用langchain文档加载器对数据进行导入
+    loader = CSVLoader(file_path=file, encoding='utf-8')
 
-    prompt_template = ChatPromptTemplate.from_template(template_string)
-    print("\n", prompt_template.messages[0].prompt)
+    # 使用pandas导入数据，用以查看
+    data = pd.read_csv(file,usecols=[1, 2])
+    print(data.head())
 
-    # llm = Tongyi(model='qwen-plus')
-    # print(Tongyi().invoke("你是谁？"))
-    customer_style = """正式普通话 \
-    用一个平静、尊敬的语气
-    """
-
-    customer_email = """
-    嗯呐，我现在可是火冒三丈，我那个搅拌机盖子竟然飞了出去，把我厨房的墙壁都溅上了果汁！
-    更糟糕的是，保修条款可不包括清理我厨房的费用。
-    伙计，赶紧给我过来！
-    """
-
-    # 使用提示模版
-    customer_messages = prompt_template.format_messages(
-                        style=customer_style,
-                        text=customer_email)
-    user_message = [
-        SystemMessage(content='你是一个友好的助手'),
-        customer_messages[0]
-    ]
-
+    # 创建指定向量存储类, 创建完成后，从加载器中调用, 通过文档加载器列表加载
+    model_name = "F:/代码库/模型库/all-mpnet-base-v2"
+    model_kwargs = {'device': 'cpu'}
+    encode_kwargs = {'normalize_embeddings': False}
+    embeddings = HuggingFaceEmbeddings(
+        model_name=model_name,
+        model_kwargs=model_kwargs,
+        encode_kwargs=encode_kwargs
+    )
+    index = VectorstoreIndexCreator(
+        embedding=embeddings,
+        vectorstore_cls=DocArrayInMemorySearch).from_loaders([loader])
+    
     llm = ChatTongyi(model='qwen-plus', temperature=0.0)
 
-    customer_response = llm.invoke(user_message)
-    print(customer_response)
-    print(customer_response.content)
+    query ="请用markdown表格的方式列出所有具有防晒功能的衬衫，对每件衬衫描述进行总结"
+
+    #使用索引查询创建一个响应，并传入这个查询
+    response = index.query(query)
+
+    # llm = ChatTongyi(model='qwen-plus', temperature=0.0)
+
+    # customer_response = llm.invoke(user_message)
+    # print(customer_response)
+    # print(customer_response.content)

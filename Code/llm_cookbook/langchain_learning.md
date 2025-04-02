@@ -51,5 +51,44 @@ chain.run(product)
 顺序链（SequentialChains）是按预定义顺序执行其链接的链。每个步骤都有一个输入/输出，一个步骤的输出是下一个步骤的输入。
 
 ```python
-from langchain.chains import SimpleSequentialChainf
+from langchain.chains import SimpleSequentialChain
+
+overall_simple_chain = SimpleSequentialChain(chains=[chain_one, chain_two],
+                                             verbose=True)
 ```
+
+### 顺序链
+
+当只有一个输入和一个输出时，简单顺序链（SimpleSequentialChain）即可实现。当有多个输入或多个输出时，则需要使用顺序链（SequentialChain）来实现。
+
+```python
+from langchain.chains import LLMChain  
+from langchain.chains import SequentialChain
+
+#输入：review    
+#输出：英文review，总结，后续回复 
+overall_chain = SequentialChain(
+    chains=[chain_one, chain_two, chain_three, chain_four],
+    input_variables=["Review"],  # 这个是第一个链的输出
+    output_variables=["English_Review", "summary","followup_message"],  # 这个是不同链的输出
+    verbose=True
+)
+```
+
+### 路由链
+
+对于更复杂的事情，根据输入将其路由到一条链，具体取决于该输入到底是什么。如果你有多个子链，每个子链都专门用于特定类型的输入，那么可以组成一个路由链，它首先决定将它传递给哪个子链，然后将它传递给那个链。
+
+路由器由两个组件组成：
+
+* 路由链（Router Chain）：路由器链本身，负责选择要调用的下一个链
+* destination_chains：路由器链可以路由到的链
+
+```python
+from langchain.chains.router import MultiPromptChain  #导入多提示链
+from langchain.chains.router.llm_router import LLMRouterChain,RouterOutputParser
+```
+
+## 基于文档的问答
+
+使用大语言模型构建一个能够回答关于给定文档和文档集合的问答系统是一种非常实用和有效的应用场景。与仅依赖模型预训练知识不同，这种方法可以进一步整合用户自有数据，实现更加个性化和专业的问答服务。例如,我们可以收集某公司的内部文档、产品说明书等文字资料，导入问答系统中。然后用户针对这些文档提出问题时，系统可以先在文档中检索相关信息，再提供给语言模型生成答案。
