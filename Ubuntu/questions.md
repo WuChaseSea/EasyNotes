@@ -32,6 +32,11 @@ sudo cp -r archives/ /mnt/f/yourfoldername  # 将文件夹复制，子系统的�
 gcc -v
 sudo apt clean all
 sudo apt-get install -y g++
+
+cd /usr/bin
+sudo rm -rf gcc g++  # 删除原有的软链接
+sudo ln -s gcc-9 gcc  # 将新的gcc-9链接过去
+sudo ln -s g++-9 g++  # 将新的g++-9链接过去
 ```
 
 编译文件的时候，出现libmpfr.so.6的问题：
